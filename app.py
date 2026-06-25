@@ -308,6 +308,16 @@ st.markdown("""
     /* ── 파일 업로더 ── */
     .stFileUploader > div { border-radius: 8px !important; }
     .stFileUploader label { font-size: 0.8rem !important; font-weight: 600 !important; color: #334155 !important; }
+    /* dropzone 내 중복 텍스트 제거 */
+    .stFileUploader [data-testid="stFileUploaderDropzone"] span:nth-of-type(n+2) {
+        display: none !important;
+    }
+    .stFileUploader [data-testid="stFileUploaderDropzoneInstructions"] div:nth-child(n+2) {
+        display: none !important;
+    }
+    .stFileUploader [data-testid="stFileUploaderDropzone"] section > div:nth-child(n+2) {
+        display: none !important;
+    }
     .stAlert { border-radius: 8px !important; }
     .stDataFrame { border: 1px solid #E2E8F0 !important; border-radius: 8px !important; }
 
