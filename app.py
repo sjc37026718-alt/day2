@@ -308,24 +308,6 @@ st.markdown("""
     /* ── 파일 업로더 ── */
     .stFileUploader > div { border-radius: 8px !important; }
     .stFileUploader label { font-size: 0.8rem !important; font-weight: 600 !important; color: #334155 !important; }
-    .stFileUploader [data-testid="stFileUploaderDropzone"] {
-        padding: 1.2rem 1rem !important;
-        min-height: 80px !important;
-    }
-    .stFileUploader [data-testid="stFileUploaderDropzone"] > div {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        gap: 0.4rem !important;
-    }
-    .stFileUploader [data-testid="stFileUploaderDropzone"] button {
-        position: relative !important;
-        margin-bottom: 0.25rem !important;
-    }
-    .stFileUploader [data-testid="stFileUploaderDropzone"] small {
-        display: block !important;
-        margin-top: 0.25rem !important;
-    }
     .stAlert { border-radius: 8px !important; }
     .stDataFrame { border: 1px solid #E2E8F0 !important; border-radius: 8px !important; }
 
