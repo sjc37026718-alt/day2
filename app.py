@@ -307,15 +307,18 @@ st.markdown("""
 
     /* ── 파일 업로더 ── */
     .stFileUploader > div { border-radius: 8px !important; }
-    .stFileUploader label { font-size: 0.8rem !important; font-weight: 600 !important; color: #334155 !important; }
-    /* dropzone 내 중복 텍스트 제거 */
-    .stFileUploader [data-testid="stFileUploaderDropzone"] span:nth-of-type(n+2) {
+    .stFileUploader [data-testid="stFileUploaderDropzone"] {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 1rem !important;
+    }
+    .stFileUploader [data-testid="stFileUploaderDropzoneInstructions"] {
         display: none !important;
     }
-    .stFileUploader [data-testid="stFileUploaderDropzoneInstructions"] div:nth-child(n+2) {
-        display: none !important;
-    }
-    .stFileUploader [data-testid="stFileUploaderDropzone"] section > div:nth-child(n+2) {
+    .stFileUploader [data-testid="stFileUploaderDropzone"] span,
+    .stFileUploader [data-testid="stFileUploaderDropzone"] small,
+    .stFileUploader [data-testid="stFileUploaderDropzone"] p {
         display: none !important;
     }
     .stAlert { border-radius: 8px !important; }
@@ -435,9 +438,11 @@ except Exception:
 # ── 업로드 ──
 col_up1, col_up2 = st.columns(2, gap="medium")
 with col_up1:
-    file_entry = st.file_uploader("입점현황 (.xlsx)", type=["xlsx", "xls"], key="entry")
+    st.markdown('<p style="font-size:0.8rem;font-weight:600;color:#334155;margin-bottom:0.25rem;">입점현황 (.xlsx)</p>', unsafe_allow_html=True)
+    file_entry = st.file_uploader("입점현황", type=["xlsx", "xls"], key="entry", label_visibility="collapsed")
 with col_up2:
-    file_sales = st.file_uploader("매출실적 (.xlsx)", type=["xlsx", "xls"], key="sales")
+    st.markdown('<p style="font-size:0.8rem;font-weight:600;color:#334155;margin-bottom:0.25rem;">매출실적 (.xlsx)</p>', unsafe_allow_html=True)
+    file_sales = st.file_uploader("매출실적", type=["xlsx", "xls"], key="sales", label_visibility="collapsed")
 
 if file_entry is None or file_sales is None:
     st.markdown("""
