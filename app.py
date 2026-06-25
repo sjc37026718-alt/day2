@@ -25,17 +25,12 @@ st.markdown("""
         padding-top: 1rem !important;
     }
 
-    /* Streamlit 기본 상단 여백 제거 */
-    .stAppHeader, header[data-testid="stHeader"] {
-        height: 0 !important;
-        min-height: 0 !important;
-        padding: 0 !important;
-    }
+    /* Streamlit 기본 헤더 — 공유 등 부가 요소 유지 */
     .stMainBlockContainer {
-        padding-top: 1rem !important;
+        padding-top: 2.5rem !important;
     }
     div[data-testid="stAppViewBlockContainer"] {
-        padding-top: 0.5rem !important;
+        padding-top: 1.5rem !important;
     }
 
     /* ── 헤더 ── */
