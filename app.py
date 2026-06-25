@@ -20,6 +20,20 @@ st.markdown("""
     .block-container {
         padding: 1.5rem 2.5rem 3rem 2.5rem !important;
         max-width: 1440px !important;
+        padding-top: 1rem !important;
+    }
+
+    /* Streamlit 기본 상단 여백 제거 */
+    .stAppHeader, header[data-testid="stHeader"] {
+        height: 0 !important;
+        min-height: 0 !important;
+        padding: 0 !important;
+    }
+    .stMainBlockContainer {
+        padding-top: 1rem !important;
+    }
+    div[data-testid="stAppViewBlockContainer"] {
+        padding-top: 0.5rem !important;
     }
 
     /* ── 헤더 ── */
@@ -185,17 +199,55 @@ st.markdown("""
 
     /* ── 사이드바 ── */
     section[data-testid="stSidebar"] {
-        background: #FFFFFF !important;
-        border-right: 1px solid #E2E8F0 !important;
+        background: #1E293B !important;
+        border-right: none !important;
     }
-    section[data-testid="stSidebar"] * {
+    section[data-testid="stSidebar"] [data-testid="stSidebarContent"] {
+        padding-top: 1.5rem;
+    }
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] .stMarkdown p,
+    section[data-testid="stSidebar"] .stMarkdown div {
+        color: #F1F5F9 !important;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect label {
+        color: #CBD5E1 !important;
+        font-size: 0.78rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.3px;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect > div {
+        background: #334155 !important;
+        border: 1px solid #475569 !important;
+        border-radius: 6px !important;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect > div:hover {
+        border-color: #64748B !important;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect span[data-baseweb="tag"] {
+        background: #475569 !important;
+        color: #F1F5F9 !important;
+        border-radius: 4px !important;
+        font-size: 0.72rem !important;
+        font-weight: 500 !important;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect span[data-baseweb="tag"] span {
+        color: #F1F5F9 !important;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect svg {
+        fill: #94A3B8 !important;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="popover"] li {
         color: #1E293B !important;
     }
+    section[data-testid="stSidebar"] input {
+        color: #F1F5F9 !important;
+    }
     .sidebar-brand {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         font-weight: 700;
-        color: #0F172A !important;
-        margin-bottom: 0.25rem;
+        color: #FFFFFF !important;
+        margin-bottom: 0.15rem;
     }
     .sidebar-section {
         font-size: 0.7rem;
@@ -204,12 +256,12 @@ st.markdown("""
         text-transform: uppercase;
         letter-spacing: 0.8px;
         margin-top: 1.25rem;
-        margin-bottom: 0.5rem;
-        padding-bottom: 0.35rem;
-        border-bottom: 1px solid #F1F5F9;
+        margin-bottom: 0.6rem;
+        padding-bottom: 0.4rem;
+        border-bottom: 1px solid #334155;
     }
     .sidebar-divider {
-        border-top: 1px solid #F1F5F9;
+        border-top: 1px solid #334155;
         margin: 0.75rem 0;
     }
 
@@ -256,9 +308,27 @@ st.markdown("""
         background: #334155 !important;
     }
 
-    /* ── 기타 ── */
+    /* ── 파일 업로더 ── */
     .stFileUploader > div { border-radius: 8px !important; }
     .stFileUploader label { font-size: 0.8rem !important; font-weight: 600 !important; color: #334155 !important; }
+    .stFileUploader [data-testid="stFileUploaderDropzone"] {
+        padding: 1.2rem 1rem !important;
+        min-height: 80px !important;
+    }
+    .stFileUploader [data-testid="stFileUploaderDropzone"] > div {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 0.4rem !important;
+    }
+    .stFileUploader [data-testid="stFileUploaderDropzone"] button {
+        position: relative !important;
+        margin-bottom: 0.25rem !important;
+    }
+    .stFileUploader [data-testid="stFileUploaderDropzone"] small {
+        display: block !important;
+        margin-top: 0.25rem !important;
+    }
     .stAlert { border-radius: 8px !important; }
     .stDataFrame { border: 1px solid #E2E8F0 !important; border-radius: 8px !important; }
 
