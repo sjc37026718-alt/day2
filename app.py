@@ -415,6 +415,67 @@ except Exception:
     st.info("날씨 정보를 불러올 수 없습니다. 인터넷 연결을 확인해주세요.")
 
 
+# ── 실시간 환율 (ExchangeRate-API) ──
+@st.cache_data(ttl=3600)
+def fetch_exchange_rates():
+    url = "https://open.er-api.com/v6/latest/USD"
+    resp = requests.get(url, timeout=5)
+    resp.raise_for_status()
+    return resp.json()
+
+try:
+    fx = fetch_exchange_rates()
+    rates = fx["rates"]
+    usd_krw = rates.get("KRW", 0)
+    eur_krw = usd_krw / rates.get("EUR", 1)
+    jpy_krw = usd_krw / rates.get("JPY", 1) * 100
+    cny_krw = usd_krw / rates.get("CNY", 1)
+    gbp_krw = usd_krw / rates.get("GBP", 1)
+
+    fx_time = fx.get("time_last_update_utc", "")
+
+    st.markdown(f"""
+    <div class="toss-card">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+            <div>
+                <div class="toss-card-title">실시간 환율</div>
+                <div class="toss-card-desc" style="margin-bottom:0;">ExchangeRate-API · 1시간마다 갱신</div>
+            </div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:0.75rem;">
+            <div style="text-align:center; padding:0.75rem; background:#F9FAFB; border-radius:12px;">
+                <div style="font-size:0.72rem; font-weight:600; color:#8B95A1; margin-bottom:0.35rem;">USD/KRW</div>
+                <div style="font-size:1.25rem; font-weight:800; color:#191F28;">{usd_krw:,.1f}</div>
+                <div style="font-size:0.68rem; color:#8B95A1;">미국 달러</div>
+            </div>
+            <div style="text-align:center; padding:0.75rem; background:#F9FAFB; border-radius:12px;">
+                <div style="font-size:0.72rem; font-weight:600; color:#8B95A1; margin-bottom:0.35rem;">EUR/KRW</div>
+                <div style="font-size:1.25rem; font-weight:800; color:#191F28;">{eur_krw:,.1f}</div>
+                <div style="font-size:0.68rem; color:#8B95A1;">유로</div>
+            </div>
+            <div style="text-align:center; padding:0.75rem; background:#F9FAFB; border-radius:12px;">
+                <div style="font-size:0.72rem; font-weight:600; color:#8B95A1; margin-bottom:0.35rem;">JPY100/KRW</div>
+                <div style="font-size:1.25rem; font-weight:800; color:#191F28;">{jpy_krw:,.1f}</div>
+                <div style="font-size:0.68rem; color:#8B95A1;">일본 엔(100)</div>
+            </div>
+            <div style="text-align:center; padding:0.75rem; background:#F9FAFB; border-radius:12px;">
+                <div style="font-size:0.72rem; font-weight:600; color:#8B95A1; margin-bottom:0.35rem;">CNY/KRW</div>
+                <div style="font-size:1.25rem; font-weight:800; color:#191F28;">{cny_krw:,.1f}</div>
+                <div style="font-size:0.68rem; color:#8B95A1;">중국 위안</div>
+            </div>
+            <div style="text-align:center; padding:0.75rem; background:#F9FAFB; border-radius:12px;">
+                <div style="font-size:0.72rem; font-weight:600; color:#8B95A1; margin-bottom:0.35rem;">GBP/KRW</div>
+                <div style="font-size:1.25rem; font-weight:800; color:#191F28;">{gbp_krw:,.1f}</div>
+                <div style="font-size:0.68rem; color:#8B95A1;">영국 파운드</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+except Exception:
+    st.info("환율 정보를 불러올 수 없습니다. 인터넷 연결을 확인해주세요.")
+
+
 # ── 업로드 ──
 col_up1, col_up2 = st.columns(2, gap="medium")
 with col_up1:
