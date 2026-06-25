@@ -419,8 +419,12 @@ except Exception:
 col_up1, col_up2 = st.columns(2, gap="medium")
 with col_up1:
     file_entry = st.file_uploader("입점현황 (.xlsx)", type=["xlsx", "xls"], key="entry")
+    if file_entry:
+        st.markdown(f'<div style="background:#E8F7EE;border-radius:10px;padding:0.6rem 1rem;margin-top:-0.5rem;font-size:0.8rem;font-weight:600;color:#00875A;">&#10003; {file_entry.name} 업로드 완료</div>', unsafe_allow_html=True)
 with col_up2:
     file_sales = st.file_uploader("매출실적 (.xlsx)", type=["xlsx", "xls"], key="sales")
+    if file_sales:
+        st.markdown(f'<div style="background:#E8F7EE;border-radius:10px;padding:0.6rem 1rem;margin-top:-0.5rem;font-size:0.8rem;font-weight:600;color:#00875A;">&#10003; {file_sales.name} 업로드 완료</div>', unsafe_allow_html=True)
 
 if file_entry is None or file_sales is None:
     st.markdown("""
