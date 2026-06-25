@@ -7,338 +7,303 @@ from datetime import datetime
 
 st.set_page_config(page_title="Brand Analytics", page_icon="◼", layout="wide")
 
-# ── 차트 팔레트: 채도 높고 명확하게 구분되는 색상 ──
-CHART_COLORS = ["#2563EB", "#DC2626", "#059669", "#D97706", "#7C3AED",
-                "#DB2777", "#0891B2", "#4F46E5", "#CA8A04", "#0D9488",
-                "#E11D48", "#2DD4BF", "#6366F1", "#EA580C", "#8B5CF6"]
+CHART_COLORS = ["#3182F6", "#F04452", "#00B386", "#F5A623", "#7B61FF",
+                "#E5503C", "#45BCD6", "#6E56CF", "#D4A017", "#2EC4B6",
+                "#FF6B6B", "#48C78E", "#845EF7", "#FD7E14", "#A78BFA"]
+
+TOSS_BLUE = "#3182F6"
 
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap');
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
-    * { font-family: 'Pretendard', 'IBM Plex Sans KR', -apple-system, sans-serif !important; }
+    * { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important; }
+    html, body, [data-testid="stAppViewContainer"] {
+        background: #F2F4F6 !important;
+    }
 
+    /* ── 레이아웃 ── */
     .block-container {
-        padding: 1.5rem 2.5rem 3rem 2.5rem !important;
-        max-width: 1440px !important;
-        padding-top: 1rem !important;
+        padding: 1rem 2rem 3rem 2rem !important;
+        max-width: 1280px !important;
     }
-
-    /* Streamlit 기본 헤더 — 공유 등 부가 요소 유지 */
     .stMainBlockContainer {
-        padding-top: 2.5rem !important;
-    }
-    div[data-testid="stAppViewBlockContainer"] {
-        padding-top: 1.5rem !important;
+        padding-top: 3rem !important;
     }
 
-    /* ── 헤더 ── */
-    .dash-header {
-        display: flex;
-        align-items: center;
-        gap: 0.9rem;
-        padding-bottom: 1.25rem;
-        margin-bottom: 1.5rem;
-        border-bottom: 2px solid #1E293B;
+    /* ── 사이드바 ── */
+    section[data-testid="stSidebar"] {
+        background: #FFFFFF !important;
+        border-right: 1px solid #F2F4F6 !important;
+        box-shadow: 2px 0 8px rgba(0,0,0,0.04) !important;
     }
-    .dash-logo {
-        width: 36px; height: 36px;
-        background: #1E293B;
-        border-radius: 6px;
-        display: flex; align-items: center; justify-content: center;
-        color: white; font-weight: 700; font-size: 0.85rem;
-        flex-shrink: 0;
+    section[data-testid="stSidebar"] [data-testid="stSidebarContent"] {
+        padding: 1.5rem 1.25rem;
     }
-    .dash-title {
-        font-size: 1.25rem;
+    .sidebar-brand {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #191F28 !important;
+        margin-bottom: 0.1rem;
+    }
+    .sidebar-section {
+        font-size: 0.72rem;
         font-weight: 700;
-        color: #0F172A;
-    }
-    .dash-subtitle {
-        font-size: 0.8rem;
-        color: #475569;
-        font-weight: 400;
-        margin-top: 1px;
-    }
-
-    /* ── 업로드 영역 ── */
-    .upload-section {
-        background: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-radius: 10px;
-        padding: 1.25rem 1.5rem;
-        margin-bottom: 1.25rem;
-    }
-    .upload-section-title {
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: #334155;
-        text-transform: uppercase;
+        color: #8B95A1 !important;
         letter-spacing: 0.5px;
+        margin-top: 1.5rem;
+        margin-bottom: 0.6rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #F2F4F6;
+    }
+    .sidebar-divider {
+        border-top: 1px solid #F2F4F6;
+        margin: 1rem 0;
+    }
+    section[data-testid="stSidebar"] label {
+        color: #4E5968 !important;
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect > div {
+        background: #F9FAFB !important;
+        border: 1px solid #E5E8EB !important;
+        border-radius: 12px !important;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect > div:hover,
+    section[data-testid="stSidebar"] .stMultiSelect > div:focus-within {
+        border-color: #3182F6 !important;
+        box-shadow: 0 0 0 3px rgba(49,130,246,0.12) !important;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect span[data-baseweb="tag"] {
+        background: #E8F3FF !important;
+        color: #3182F6 !important;
+        border-radius: 8px !important;
+        font-size: 0.72rem !important;
+        font-weight: 600 !important;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect span[data-baseweb="tag"] span {
+        color: #3182F6 !important;
+    }
+
+    /* ── 토스 카드 ── */
+    .toss-card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .toss-card-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #191F28;
+        margin-bottom: 0.2rem;
+    }
+    .toss-card-desc {
+        font-size: 0.78rem;
+        color: #8B95A1;
+        font-weight: 400;
         margin-bottom: 0.75rem;
     }
 
+    /* ── 헤더 ── */
+    .toss-header {
+        padding: 0.5rem 0 1.5rem 0;
+    }
+    .toss-header-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #191F28;
+        letter-spacing: -0.3px;
+    }
+    .toss-header-sub {
+        font-size: 0.85rem;
+        color: #8B95A1;
+        font-weight: 400;
+        margin-top: 4px;
+    }
+
     /* ── 상태 바 ── */
-    .status-bar {
-        background: #F0FDF4;
-        border: 1px solid #BBF7D0;
-        border-radius: 8px;
-        padding: 0.7rem 1rem;
-        font-size: 0.8rem;
-        color: #14532D;
-        font-weight: 500;
+    .toss-status {
+        background: #E8F7EE;
+        border-radius: 12px;
+        padding: 0.85rem 1.25rem;
+        font-size: 0.82rem;
+        color: #00875A;
+        font-weight: 600;
         margin-bottom: 1.25rem;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.6rem;
     }
-    .status-bar .dot {
+    .toss-status .dot {
         width: 8px; height: 8px;
-        background: #22C55E;
+        background: #00B386;
         border-radius: 50%;
         flex-shrink: 0;
     }
 
-    /* ── KPI 카드 ── */
+    /* ── KPI ── */
     .kpi-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 0.75rem;
+        gap: 1rem;
         margin-bottom: 1.5rem;
     }
     .kpi-card {
         background: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-radius: 10px;
-        padding: 1.25rem 1.4rem;
-        position: relative;
-        overflow: hidden;
+        border-radius: 16px;
+        padding: 1.4rem 1.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
-    .kpi-card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0;
-        width: 4px; height: 100%;
-    }
-    .kpi-card:nth-child(1)::before { background: #2563EB; }
-    .kpi-card:nth-child(2)::before { background: #7C3AED; }
-    .kpi-card:nth-child(3)::before { background: #059669; }
-    .kpi-card:nth-child(4)::before { background: #D97706; }
     .kpi-label {
-        font-size: 0.75rem;
+        font-size: 0.78rem;
         font-weight: 600;
-        color: #64748B;
-        margin-bottom: 0.5rem;
-        letter-spacing: 0.2px;
+        color: #8B95A1;
+        margin-bottom: 0.6rem;
     }
     .kpi-value {
-        font-size: 1.85rem;
+        font-size: 2rem;
         font-weight: 800;
-        color: #0F172A;
+        color: #191F28;
         line-height: 1.1;
+        letter-spacing: -0.5px;
     }
     .kpi-unit {
         font-size: 0.9rem;
-        font-weight: 600;
-        color: #334155;
-        margin-left: 3px;
+        font-weight: 700;
+        color: #4E5968;
+        margin-left: 2px;
     }
     .kpi-sub {
-        font-size: 0.72rem;
-        color: #64748B;
+        font-size: 0.73rem;
+        color: #8B95A1;
         font-weight: 500;
-        margin-top: 0.4rem;
-    }
-
-    /* ── 차트 카드 ── */
-    .chart-card {
-        background: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-radius: 10px;
-        padding: 1.25rem 1.5rem 1rem 1.5rem;
-        margin-bottom: 0.75rem;
-    }
-    .chart-card-title {
-        font-size: 0.85rem;
-        font-weight: 700;
-        color: #0F172A;
-        margin-bottom: 0.25rem;
-    }
-    .chart-card-desc {
-        font-size: 0.7rem;
-        color: #64748B;
-        font-weight: 400;
-        margin-bottom: 0.5rem;
+        margin-top: 0.5rem;
     }
 
     /* ── 탭 ── */
     .stTabs [data-baseweb="tab-list"] {
         gap: 0;
-        background: transparent;
-        border-bottom: 2px solid #E2E8F0;
+        background: #FFFFFF;
+        border-radius: 12px;
+        padding: 4px;
+        border: none !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        margin-bottom: 1rem;
     }
     .stTabs [data-baseweb="tab"] {
         font-size: 0.85rem !important;
         font-weight: 600 !important;
-        color: #94A3B8 !important;
-        padding: 0.7rem 1.5rem !important;
-        border-bottom: 2px solid transparent !important;
+        color: #8B95A1 !important;
+        padding: 0.6rem 1.5rem !important;
+        border-radius: 10px !important;
+        border: none !important;
         background: transparent !important;
     }
     .stTabs [aria-selected="true"] {
-        color: #0F172A !important;
-        border-bottom: 2px solid #2563EB !important;
+        color: #191F28 !important;
+        background: #F2F4F6 !important;
+        border: none !important;
     }
     .stTabs [data-baseweb="tab-panel"] {
-        padding: 1.25rem 0 0 0 !important;
+        padding: 0.5rem 0 0 0 !important;
     }
-
-    /* ── 사이드바 ── */
-    section[data-testid="stSidebar"] {
-        background: #1E293B !important;
-        border-right: none !important;
-    }
-    section[data-testid="stSidebar"] [data-testid="stSidebarContent"] {
-        padding-top: 1.5rem;
-    }
-    section[data-testid="stSidebar"] label,
-    section[data-testid="stSidebar"] .stMarkdown p,
-    section[data-testid="stSidebar"] .stMarkdown div {
-        color: #F1F5F9 !important;
-    }
-    section[data-testid="stSidebar"] .stMultiSelect label {
-        color: #CBD5E1 !important;
-        font-size: 0.78rem !important;
-        font-weight: 600 !important;
-        letter-spacing: 0.3px;
-    }
-    section[data-testid="stSidebar"] .stMultiSelect > div {
-        background: #334155 !important;
-        border: 1px solid #475569 !important;
-        border-radius: 6px !important;
-    }
-    section[data-testid="stSidebar"] .stMultiSelect > div:hover {
-        border-color: #64748B !important;
-    }
-    section[data-testid="stSidebar"] .stMultiSelect span[data-baseweb="tag"] {
-        background: #475569 !important;
-        color: #F1F5F9 !important;
-        border-radius: 4px !important;
-        font-size: 0.72rem !important;
-        font-weight: 500 !important;
-    }
-    section[data-testid="stSidebar"] .stMultiSelect span[data-baseweb="tag"] span {
-        color: #F1F5F9 !important;
-    }
-    section[data-testid="stSidebar"] .stMultiSelect svg {
-        fill: #94A3B8 !important;
-    }
-    section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="popover"] li {
-        color: #1E293B !important;
-    }
-    section[data-testid="stSidebar"] input {
-        color: #F1F5F9 !important;
-    }
-    .sidebar-brand {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: #FFFFFF !important;
-        margin-bottom: 0.15rem;
-    }
-    .sidebar-section {
-        font-size: 0.7rem;
-        font-weight: 700;
-        color: #94A3B8 !important;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        margin-top: 1.25rem;
-        margin-bottom: 0.6rem;
-        padding-bottom: 0.4rem;
-        border-bottom: 1px solid #334155;
-    }
-    .sidebar-divider {
-        border-top: 1px solid #334155;
-        margin: 0.75rem 0;
+    .stTabs [data-baseweb="tab-highlight"],
+    .stTabs [data-baseweb="tab-border"] {
+        display: none !important;
     }
 
     /* ── 섹션 ── */
     .section-wrapper {
         background: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-radius: 10px;
-        margin-bottom: 0.75rem;
+        border-radius: 16px;
+        margin-bottom: 1rem;
         overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
     .section-header {
-        padding: 0.9rem 1.25rem;
-        border-bottom: 1px solid #F1F5F9;
+        padding: 1rem 1.5rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
     .section-label {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         font-weight: 700;
-        color: #0F172A;
+        color: #191F28;
     }
     .section-badge {
-        font-size: 0.7rem;
-        background: #F1F5F9;
-        color: #475569;
-        padding: 0.2rem 0.6rem;
-        border-radius: 6px;
+        font-size: 0.72rem;
+        background: #F2F4F6;
+        color: #6B7684;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
         font-weight: 600;
     }
 
     /* ── 버튼 ── */
     .stDownloadButton > button {
-        background: #1E293B !important;
+        background: #3182F6 !important;
         color: white !important;
         border: none !important;
-        border-radius: 8px !important;
-        font-size: 0.8rem !important;
-        font-weight: 600 !important;
-        padding: 0.6rem 1.5rem !important;
+        border-radius: 12px !important;
+        font-size: 0.85rem !important;
+        font-weight: 700 !important;
+        padding: 0.7rem 1.75rem !important;
+        transition: background 0.2s !important;
     }
     .stDownloadButton > button:hover {
-        background: #334155 !important;
+        background: #1B64DA !important;
     }
 
     /* ── 파일 업로더 ── */
-    .stFileUploader { border-radius: 8px !important; }
-    .stFileUploader [data-testid="stFileUploaderDropzoneInstructions"] {
-        visibility: hidden !important;
-        height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow: hidden !important;
+    .stFileUploader label {
+        font-size: 0.85rem !important;
+        font-weight: 700 !important;
+        color: #191F28 !important;
     }
-    .stAlert { border-radius: 8px !important; }
-    .stDataFrame { border: 1px solid #E2E8F0 !important; border-radius: 8px !important; }
+    .stFileUploader [data-testid="stFileUploaderDropzone"] {
+        background: #FFFFFF !important;
+        border: 2px dashed #D1D6DB !important;
+        border-radius: 16px !important;
+        transition: border-color 0.2s !important;
+    }
+    .stFileUploader [data-testid="stFileUploaderDropzone"]:hover {
+        border-color: #3182F6 !important;
+    }
 
+    /* ── 기타 ── */
+    .stAlert { border-radius: 12px !important; }
+    .stDataFrame {
+        border: none !important;
+        border-radius: 16px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+        overflow: hidden;
+    }
     div[data-testid="stMetric"] { display: none; }
 
     .empty-state {
         text-align: center;
-        padding: 5rem 2rem;
+        padding: 6rem 2rem;
     }
     .empty-state-icon {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        opacity: 0.15;
+        font-size: 3.5rem;
+        margin-bottom: 1.25rem;
+        opacity: 0.12;
     }
     .empty-state-title {
-        font-size: 1.1rem;
+        font-size: 1.15rem;
         font-weight: 700;
-        color: #1E293B;
+        color: #191F28;
         margin-bottom: 0.5rem;
     }
     .empty-state-text {
-        font-size: 0.85rem;
+        font-size: 0.88rem;
         font-weight: 400;
-        color: #64748B;
-        line-height: 1.7;
+        color: #8B95A1;
+        line-height: 1.8;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -346,12 +311,9 @@ st.markdown("""
 
 # ── 헤더 ──
 st.markdown("""
-<div class="dash-header">
-    <div class="dash-logo">BA</div>
-    <div>
-        <div class="dash-title">Brand Analytics</div>
-        <div class="dash-subtitle">브랜드 입점현황 · 매출실적 통합 분석 대시보드</div>
-    </div>
+<div class="toss-header">
+    <div class="toss-header-title">Brand Analytics</div>
+    <div class="toss-header-sub">브랜드 입점현황 · 매출실적 통합 분석 대시보드</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -391,35 +353,32 @@ try:
     hour_labels = [datetime.fromisoformat(t).strftime("%H시") for t in hourly_times]
 
     st.markdown(f"""
-    <div class="chart-card" style="margin-bottom:1.25rem;">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
-            <div>
-                <div class="chart-card-title">서울 현재 날씨</div>
-                <div class="chart-card-desc">Open-Meteo API · 10분마다 갱신</div>
-            </div>
-            <div style="font-size:2.2rem; line-height:1;">
-                {weather_icon} <span style="font-size:1.8rem; font-weight:800; color:#0F172A;">{current_temp}°C</span>
-            </div>
+    <div class="toss-card" style="display:flex; align-items:center; justify-content:space-between;">
+        <div>
+            <div class="toss-card-title">서울 현재 날씨</div>
+            <div class="toss-card-desc" style="margin-bottom:0;">Open-Meteo · 10분마다 갱신</div>
+        </div>
+        <div style="font-size:2rem; line-height:1;">
+            {weather_icon} <span style="font-size:1.75rem; font-weight:800; color:#191F28;">{current_temp}°C</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="chart-card" style="margin-bottom:1.25rem;"><div class="chart-card-title">오늘 시간별 기온</div><div class="chart-card-desc">서울 (37.57°N, 126.98°E)</div>', unsafe_allow_html=True)
+    st.markdown('<div class="toss-card"><div class="toss-card-title">오늘 시간별 기온</div><div class="toss-card-desc">서울 (37.57°N, 126.98°E)</div>', unsafe_allow_html=True)
     df_weather = pd.DataFrame({"시간": hour_labels, "기온(°C)": hourly_temps})
     fig_w = px.area(df_weather, x="시간", y="기온(°C)",
-                    color_discrete_sequence=["#2563EB"])
+                    color_discrete_sequence=[TOSS_BLUE])
     fig_w.update_traces(
         line=dict(width=2.5),
-        fillcolor="rgba(37,99,235,0.10)",
+        fillcolor="rgba(49,130,246,0.08)",
         hovertemplate="%{x}<br><b>%{y}°C</b><extra></extra>",
     )
     fig_w.update_layout(
-        font=dict(family="Pretendard, sans-serif", size=12, color="#1E293B"),
+        font=dict(family="Pretendard, sans-serif", size=12, color="#191F28"),
         paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-        margin=dict(l=20, r=20, t=10, b=30), height=260,
-        xaxis=dict(gridcolor="#F1F5F9", tickfont=dict(size=10, color="#334155")),
-        yaxis=dict(gridcolor="#F1F5F9", tickfont=dict(size=11, color="#334155"),
-                   title=None),
+        margin=dict(l=20, r=20, t=10, b=30), height=240,
+        xaxis=dict(gridcolor="#F2F4F6", tickfont=dict(size=10, color="#6B7684")),
+        yaxis=dict(gridcolor="#F2F4F6", tickfont=dict(size=11, color="#6B7684"), title=None),
     )
     st.plotly_chart(fig_w, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
@@ -437,7 +396,7 @@ with col_up2:
 
 if file_entry is None or file_sales is None:
     st.markdown("""
-    <div class="empty-state">
+    <div class="toss-card empty-state">
         <div class="empty-state-icon">&#128202;</div>
         <div class="empty-state-title">엑셀 파일 2개를 업로드해주세요</div>
         <div class="empty-state-text">
@@ -464,10 +423,9 @@ if merge_key is None:
 merged = pd.merge(df_sales, df_entry, on=merge_key, how="left")
 
 st.markdown(f"""
-<div class="status-bar">
+<div class="toss-status">
     <div class="dot"></div>
-    병합 완료 &nbsp;—&nbsp; Key: <b>{merge_key}</b> &nbsp;|&nbsp;
-    <b>{len(merged):,}</b> rows &times; <b>{len(merged.columns)}</b> columns
+    병합 완료 — Key: <b>{merge_key}</b> | <b>{len(merged):,}</b> rows × <b>{len(merged.columns)}</b> columns
 </div>
 """, unsafe_allow_html=True)
 
@@ -535,24 +493,24 @@ if grade_col and selected_grades is not None:
 # ── 차트 공통 스타일 ──
 def styled_chart(fig, height=400):
     fig.update_layout(
-        font=dict(family="Pretendard, sans-serif", size=12, color="#1E293B"),
+        font=dict(family="Pretendard, sans-serif", size=12, color="#191F28"),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         margin=dict(l=20, r=20, t=40, b=30),
         title=None,
-        legend=dict(font=dict(size=12, color="#334155"), bgcolor="rgba(0,0,0,0)"),
+        legend=dict(font=dict(size=12, color="#4E5968"), bgcolor="rgba(0,0,0,0)"),
         coloraxis_showscale=False,
         height=height,
     )
     fig.update_xaxes(
-        gridcolor="#F1F5F9", zerolinecolor="#E2E8F0",
-        title_font=dict(size=12, color="#475569"),
-        tickfont=dict(size=11, color="#334155"),
+        gridcolor="#F2F4F6", zerolinecolor="#E5E8EB",
+        title_font=dict(size=12, color="#6B7684"),
+        tickfont=dict(size=11, color="#4E5968"),
     )
     fig.update_yaxes(
-        gridcolor="#F1F5F9", zerolinecolor="#E2E8F0",
-        title_font=dict(size=12, color="#475569"),
-        tickfont=dict(size=11, color="#334155"),
+        gridcolor="#F2F4F6", zerolinecolor="#E5E8EB",
+        title_font=dict(size=12, color="#6B7684"),
+        tickfont=dict(size=11, color="#4E5968"),
     )
     return fig
 
@@ -599,27 +557,27 @@ with tab1:
     col_l, col_r = st.columns([1, 1], gap="medium")
 
     with col_l:
-        st.markdown('<div class="chart-card"><div class="chart-card-title">브랜드별 매출 TOP 12</div><div class="chart-card-desc">총 매출 기준 상위 12개 브랜드</div>', unsafe_allow_html=True)
+        st.markdown('<div class="toss-card"><div class="toss-card-title">브랜드별 매출 TOP 12</div><div class="toss-card-desc">총 매출 기준 상위 12개 브랜드</div>', unsafe_allow_html=True)
         if brand_col and sales_col:
             brand_sales = (filtered.groupby(brand_col)[sales_col].sum()
                            .reset_index().sort_values(sales_col, ascending=True).tail(12))
             fig = px.bar(brand_sales, y=brand_col, x=sales_col, orientation="h")
-            fig.update_traces(marker_color="#2563EB", marker_line_width=0)
+            fig.update_traces(marker_color=TOSS_BLUE, marker_line_width=0)
             st.plotly_chart(styled_chart(fig, 420), use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with col_r:
-        st.markdown('<div class="chart-card"><div class="chart-card-title">브랜드별 순이익 TOP 12</div><div class="chart-card-desc">순이익 기준 상위 12개 브랜드</div>', unsafe_allow_html=True)
+        st.markdown('<div class="toss-card"><div class="toss-card-title">브랜드별 순이익 TOP 12</div><div class="toss-card-desc">순이익 기준 상위 12개 브랜드</div>', unsafe_allow_html=True)
         if brand_col and profit_col:
             brand_profit = (filtered.groupby(brand_col)[profit_col].sum()
                             .reset_index().sort_values(profit_col, ascending=True).tail(12))
             fig2 = px.bar(brand_profit, y=brand_col, x=profit_col, orientation="h")
-            fig2.update_traces(marker_color="#059669", marker_line_width=0)
+            fig2.update_traces(marker_color="#00B386", marker_line_width=0)
             st.plotly_chart(styled_chart(fig2, 420), use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     if period_col and sales_col and brand_col:
-        st.markdown('<div class="chart-card"><div class="chart-card-title">월별 매출 추이</div><div class="chart-card-desc">매출 상위 5개 브랜드의 월간 트렌드</div>', unsafe_allow_html=True)
+        st.markdown('<div class="toss-card"><div class="toss-card-title">월별 매출 추이</div><div class="toss-card-desc">매출 상위 5개 브랜드의 월간 트렌드</div>', unsafe_allow_html=True)
         top5 = filtered.groupby(brand_col)[sales_col].sum().nlargest(5).index.tolist()
         monthly = (filtered[filtered[brand_col].isin(top5)]
                    .groupby([period_col, brand_col])[sales_col].sum().reset_index())
@@ -630,7 +588,7 @@ with tab1:
         st.markdown('</div>', unsafe_allow_html=True)
 
     if brand_col and sales_col and profit_col and order_col:
-        st.markdown('<div class="chart-card"><div class="chart-card-title">매출 vs 순이익</div><div class="chart-card-desc">버블 크기 = 주문건수</div>', unsafe_allow_html=True)
+        st.markdown('<div class="toss-card"><div class="toss-card-title">매출 vs 순이익</div><div class="toss-card-desc">버블 크기 = 주문건수</div>', unsafe_allow_html=True)
         scatter_df = (filtered.groupby(brand_col)
                       .agg({sales_col: "sum", profit_col: "sum", order_col: "sum"})
                       .reset_index())
@@ -649,22 +607,22 @@ with tab2:
         col_l2, col_r2 = st.columns([1, 1], gap="medium")
 
         with col_l2:
-            st.markdown('<div class="chart-card"><div class="chart-card-title">채널별 매출 비중</div><div class="chart-card-desc">전체 매출 대비 채널 점유율</div>', unsafe_allow_html=True)
+            st.markdown('<div class="toss-card"><div class="toss-card-title">채널별 매출 비중</div><div class="toss-card-desc">전체 매출 대비 채널 점유율</div>', unsafe_allow_html=True)
             ch_sales = (filtered.groupby(channel_col)[sales_col].sum()
                         .reset_index().sort_values(sales_col, ascending=False))
             fig4 = px.pie(ch_sales, names=channel_col, values=sales_col,
-                          hole=0.5, color_discrete_sequence=CHART_COLORS)
+                          hole=0.55, color_discrete_sequence=CHART_COLORS)
             fig4.update_traces(
-                textinfo="label+percent", textfont_size=12, textfont_color="#1E293B",
+                textinfo="label+percent", textfont_size=12, textfont_color="#191F28",
                 hovertemplate="<b>%{label}</b><br>%{value:,.0f}원<br>%{percent}",
-                marker=dict(line=dict(color="#FFFFFF", width=2)),
+                marker=dict(line=dict(color="#FFFFFF", width=3)),
             )
             st.plotly_chart(styled_chart(fig4, 400), use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
         with col_r2:
             if order_col:
-                st.markdown('<div class="chart-card"><div class="chart-card-title">채널별 주문건수</div><div class="chart-card-desc">각 채널의 총 주문 수</div>', unsafe_allow_html=True)
+                st.markdown('<div class="toss-card"><div class="toss-card-title">채널별 주문건수</div><div class="toss-card-desc">각 채널의 총 주문 수</div>', unsafe_allow_html=True)
                 ch_orders = (filtered.groupby(channel_col)[order_col].sum()
                              .reset_index().sort_values(order_col, ascending=True))
                 fig5 = px.bar(ch_orders, y=channel_col, x=order_col, orientation="h",
@@ -676,21 +634,21 @@ with tab2:
         col_l3, col_r3 = st.columns([1, 1], gap="medium")
         with col_l3:
             if return_rate_col:
-                st.markdown('<div class="chart-card"><div class="chart-card-title">채널별 반품률</div><div class="chart-card-desc">평균 반품률 (%)</div>', unsafe_allow_html=True)
+                st.markdown('<div class="toss-card"><div class="toss-card-title">채널별 반품률</div><div class="toss-card-desc">평균 반품률 (%)</div>', unsafe_allow_html=True)
                 ch_return = (filtered.groupby(channel_col)[return_rate_col].mean()
                              .reset_index().sort_values(return_rate_col, ascending=True))
                 fig6 = px.bar(ch_return, y=channel_col, x=return_rate_col, orientation="h")
-                fig6.update_traces(marker_color="#DC2626")
+                fig6.update_traces(marker_color="#F04452")
                 st.plotly_chart(styled_chart(fig6, 340), use_container_width=True)
                 st.markdown('</div>', unsafe_allow_html=True)
 
         with col_r3:
             if repurchase_col:
-                st.markdown('<div class="chart-card"><div class="chart-card-title">채널별 재구매율</div><div class="chart-card-desc">평균 재구매율 (%)</div>', unsafe_allow_html=True)
+                st.markdown('<div class="toss-card"><div class="toss-card-title">채널별 재구매율</div><div class="toss-card-desc">평균 재구매율 (%)</div>', unsafe_allow_html=True)
                 ch_repurchase = (filtered.groupby(channel_col)[repurchase_col].mean()
                                  .reset_index().sort_values(repurchase_col, ascending=True))
                 fig_rep = px.bar(ch_repurchase, y=channel_col, x=repurchase_col, orientation="h")
-                fig_rep.update_traces(marker_color="#059669")
+                fig_rep.update_traces(marker_color="#00B386")
                 st.plotly_chart(styled_chart(fig_rep, 340), use_container_width=True)
                 st.markdown('</div>', unsafe_allow_html=True)
 
@@ -701,21 +659,21 @@ with tab3:
 
     with col_l4:
         if status_col:
-            st.markdown('<div class="chart-card"><div class="chart-card-title">입점상태 분포</div><div class="chart-card-desc">브랜드 수 기준</div>', unsafe_allow_html=True)
+            st.markdown('<div class="toss-card"><div class="toss-card-title">입점상태 분포</div><div class="toss-card-desc">브랜드 수 기준</div>', unsafe_allow_html=True)
             status_counts = filtered.groupby(status_col)[merge_key].nunique().reset_index()
             status_counts.columns = [status_col, "count"]
             fig7 = px.pie(status_counts, names=status_col, values="count",
-                          hole=0.5, color_discrete_sequence=CHART_COLORS)
+                          hole=0.55, color_discrete_sequence=CHART_COLORS)
             fig7.update_traces(
-                textinfo="label+value+percent", textfont_size=12, textfont_color="#1E293B",
-                marker=dict(line=dict(color="#FFFFFF", width=2)),
+                textinfo="label+value+percent", textfont_size=12, textfont_color="#191F28",
+                marker=dict(line=dict(color="#FFFFFF", width=3)),
             )
             st.plotly_chart(styled_chart(fig7, 380), use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
     with col_r4:
         if grade_col:
-            st.markdown('<div class="chart-card"><div class="chart-card-title">계약등급별 브랜드 수</div><div class="chart-card-desc">등급 분포</div>', unsafe_allow_html=True)
+            st.markdown('<div class="toss-card"><div class="toss-card-title">계약등급별 브랜드 수</div><div class="toss-card-desc">등급 분포</div>', unsafe_allow_html=True)
             grade_counts = filtered.groupby(grade_col)[merge_key].nunique().reset_index()
             grade_counts.columns = [grade_col, "count"]
             fig8 = px.bar(grade_counts, x=grade_col, y="count",
@@ -728,7 +686,7 @@ with tab3:
 
     with col_l5:
         if category_col and sales_col:
-            st.markdown('<div class="chart-card"><div class="chart-card-title">카테고리별 매출</div><div class="chart-card-desc">상품 카테고리 기준</div>', unsafe_allow_html=True)
+            st.markdown('<div class="toss-card"><div class="toss-card-title">카테고리별 매출</div><div class="toss-card-desc">상품 카테고리 기준</div>', unsafe_allow_html=True)
             cat_sales = (filtered.groupby(category_col)[sales_col].sum()
                          .reset_index().sort_values(sales_col, ascending=True))
             fig9 = px.bar(cat_sales, y=category_col, x=sales_col, orientation="h",
@@ -739,7 +697,7 @@ with tab3:
 
     with col_r5:
         if style_col and sales_col:
-            st.markdown('<div class="chart-card"><div class="chart-card-title">스타일별 매출</div><div class="chart-card-desc">패션 스타일 기준</div>', unsafe_allow_html=True)
+            st.markdown('<div class="toss-card"><div class="toss-card-title">스타일별 매출</div><div class="toss-card-desc">패션 스타일 기준</div>', unsafe_allow_html=True)
             style_sales = (filtered.groupby(style_col)[sales_col].sum()
                            .reset_index().sort_values(sales_col, ascending=True))
             fig10 = px.bar(style_sales, y=style_col, x=sales_col, orientation="h",
@@ -749,7 +707,7 @@ with tab3:
             st.markdown('</div>', unsafe_allow_html=True)
 
     if category_col and brand_col and sales_col:
-        st.markdown('<div class="chart-card"><div class="chart-card-title">카테고리 × 브랜드 히트맵</div><div class="chart-card-desc">매출 상위 10개 브랜드 기준</div>', unsafe_allow_html=True)
+        st.markdown('<div class="toss-card"><div class="toss-card-title">카테고리 × 브랜드 히트맵</div><div class="toss-card-desc">매출 상위 10개 브랜드 기준</div>', unsafe_allow_html=True)
         heat_data = (filtered.groupby([category_col, brand_col])[sales_col].sum().reset_index())
         top_brands = heat_data.groupby(brand_col)[sales_col].sum().nlargest(10).index.tolist()
         heat_data = heat_data[heat_data[brand_col].isin(top_brands)]
