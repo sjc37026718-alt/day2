@@ -258,7 +258,7 @@ st.markdown("""
         background: #1B64DA !important;
     }
 
-    /* ── 파일 업로더 ── */
+    /* ── 파일 업로더: 내부 텍스트 숨기고 한글화 ── */
     .stFileUploader label {
         font-size: 0.85rem !important;
         font-weight: 700 !important;
@@ -269,9 +269,37 @@ st.markdown("""
         border: 2px dashed #D1D6DB !important;
         border-radius: 16px !important;
         transition: border-color 0.2s !important;
+        position: relative !important;
+        min-height: 100px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
     .stFileUploader [data-testid="stFileUploaderDropzone"]:hover {
         border-color: #3182F6 !important;
+    }
+    .stFileUploader [data-testid="stFileUploaderDropzone"] > div,
+    .stFileUploader [data-testid="stFileUploaderDropzone"] > section,
+    .stFileUploader [data-testid="stFileUploaderDropzone"] > span {
+        visibility: hidden !important;
+        position: absolute !important;
+    }
+    .stFileUploader [data-testid="stFileUploaderDropzone"] > input[type="file"] {
+        position: absolute !important;
+        inset: 0 !important;
+        opacity: 0 !important;
+        cursor: pointer !important;
+        z-index: 2 !important;
+    }
+    .stFileUploader [data-testid="stFileUploaderDropzone"]::after {
+        content: "파일을 여기에 끌어놓거나 클릭하세요" !important;
+        visibility: visible !important;
+        position: absolute !important;
+        font-size: 0.82rem !important;
+        font-weight: 500 !important;
+        color: #8B95A1 !important;
+        pointer-events: none !important;
+        z-index: 1 !important;
     }
 
     /* ── 기타 ── */
