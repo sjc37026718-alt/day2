@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import requests
+from datetime import datetime
 
 st.set_page_config(page_title="Brand Analytics", page_icon="◼", layout="wide")
 
@@ -369,6 +371,79 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
+# ── 서울 날씨 (Open-Meteo API) ──
+@st.cache_data(ttl=600)
+def fetch_seoul_weather():
+    url = (
+        "https://api.open-meteo.com/v1/forecast"
+        "?latitude=37.5665&longitude=126.978"
+        "&current=temperature_2m,weathercode"
+        "&hourly=temperature_2m"
+        "&forecast_days=1"
+        "&timezone=Asia/Seoul"
+    )
+    resp = requests.get(url, timeout=5)
+    resp.raise_for_status()
+    return resp.json()
+
+WMO_ICONS = {
+    0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️",
+    45: "🌫️", 48: "🌫️",
+    51: "🌦️", 53: "🌦️", 55: "🌧️",
+    61: "🌧️", 63: "🌧️", 65: "🌧️",
+    71: "🌨️", 73: "🌨️", 75: "🌨️",
+    80: "🌦️", 81: "🌧️", 82: "🌧️",
+    95: "⛈️", 96: "⛈️", 99: "⛈️",
+}
+
+try:
+    weather = fetch_seoul_weather()
+    current_temp = weather["current"]["temperature_2m"]
+    weather_code = weather["current"].get("weathercode", 0)
+    weather_icon = WMO_ICONS.get(weather_code, "🌡️")
+
+    hourly_times = weather["hourly"]["time"]
+    hourly_temps = weather["hourly"]["temperature_2m"]
+    hour_labels = [datetime.fromisoformat(t).strftime("%H시") for t in hourly_times]
+
+    st.markdown(f"""
+    <div class="chart-card" style="margin-bottom:1.25rem;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+            <div>
+                <div class="chart-card-title">서울 현재 날씨</div>
+                <div class="chart-card-desc">Open-Meteo API · 10분마다 갱신</div>
+            </div>
+            <div style="font-size:2.2rem; line-height:1;">
+                {weather_icon} <span style="font-size:1.8rem; font-weight:800; color:#0F172A;">{current_temp}°C</span>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div class="chart-card" style="margin-bottom:1.25rem;"><div class="chart-card-title">오늘 시간별 기온</div><div class="chart-card-desc">서울 (37.57°N, 126.98°E)</div>', unsafe_allow_html=True)
+    df_weather = pd.DataFrame({"시간": hour_labels, "기온(°C)": hourly_temps})
+    fig_w = px.area(df_weather, x="시간", y="기온(°C)",
+                    color_discrete_sequence=["#2563EB"])
+    fig_w.update_traces(
+        line=dict(width=2.5),
+        fillcolor="rgba(37,99,235,0.10)",
+        hovertemplate="%{x}<br><b>%{y}°C</b><extra></extra>",
+    )
+    fig_w.update_layout(
+        font=dict(family="Pretendard, sans-serif", size=12, color="#1E293B"),
+        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+        margin=dict(l=20, r=20, t=10, b=30), height=260,
+        xaxis=dict(gridcolor="#F1F5F9", tickfont=dict(size=10, color="#334155")),
+        yaxis=dict(gridcolor="#F1F5F9", tickfont=dict(size=11, color="#334155"),
+                   title=None),
+    )
+    st.plotly_chart(fig_w, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+except Exception:
+    st.info("날씨 정보를 불러올 수 없습니다. 인터넷 연결을 확인해주세요.")
+
 
 # ── 업로드 ──
 st.markdown('<div class="upload-section"><div class="upload-section-title">데이터 업로드</div>', unsafe_allow_html=True)
