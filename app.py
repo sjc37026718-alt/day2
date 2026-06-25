@@ -307,6 +307,13 @@ st.markdown("""
 
     /* ── 파일 업로더 ── */
     .stFileUploader { border-radius: 8px !important; }
+    .stFileUploader [data-testid="stFileUploaderDropzoneInstructions"] {
+        visibility: hidden !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
     .stAlert { border-radius: 8px !important; }
     .stDataFrame { border: 1px solid #E2E8F0 !important; border-radius: 8px !important; }
 
