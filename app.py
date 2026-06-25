@@ -441,13 +441,11 @@ except Exception:
 
 
 # ── 업로드 ──
-st.markdown('<div class="upload-section"><div class="upload-section-title">데이터 업로드</div>', unsafe_allow_html=True)
 col_up1, col_up2 = st.columns(2, gap="medium")
 with col_up1:
     file_entry = st.file_uploader("입점현황 (.xlsx)", type=["xlsx", "xls"], key="entry")
 with col_up2:
     file_sales = st.file_uploader("매출실적 (.xlsx)", type=["xlsx", "xls"], key="sales")
-st.markdown('</div>', unsafe_allow_html=True)
 
 if file_entry is None or file_sales is None:
     st.markdown("""
